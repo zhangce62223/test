@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC 
+    "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="cn.bdqn.dao.RoleMapper">
+    	<!-- 根据角色名称查询用户信息 -->
+    	<select id="findRoleList" resultType="Role">
+    		select * from smbms_role 
+    		<trim prefix="where" prefixOverrides="and | or">
+    			<if test="roleName != null ">
+    				and roleName like concat('%',#{roleName},'%') 
+    			</if>   			   			
+    		</trim>
+    	</select>
+    	
+    	<!-- 添加角色信息 -->
+    	<insert id="addRole" parameterType="Role">
+    		insert into smbms_role (roleCode,roleName,createdBy,creationDate,modifyBy,modifyDate)
+    		values(#{roleCode},#{roleName},#{createdBy},#{creationDate},#{modifyBy},#{modifyDate})
+    	</insert>
+    	
+    	<!-- 修改角色信息 -->
+    	<update id="updateRle" parameterType="Role">
+    		update smbms_role 
+    		<set>
+    			<if test="roleName!=null and roleName!=''">
+    				roleName = #{roleName},
+    			</if>
+    			<if test="roleCode!=null">
+    				roleCode = #{roleCode},
+    			</if>
+    		</set>
+    		where id = #{id}
+    	</update>
+    	
+    	<!-- 通过id删除角色信息 -->
+    	<delete id="deletRole" parameterType="int">
+    		delete from smbms_role where id = #{id}
+    	</delete>
+    	
+    	<!-- 查询角色下的用户信息 -->
+    	<select id="findRoleByUser" resultType="User">
+    		select * from smbms_user where userRole = #{id}
+    	</select>
+    	
+    	
+    </mapper>
